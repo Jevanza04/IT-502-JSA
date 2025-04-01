@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join JSA</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/scripts.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="membership.html">Membership</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">E-board Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="membership">
+        <h2>Join the Japanese Students Association (JSA)</h2>
+        <p>Fill in the form below to become a member:</p>
+
+        <form action="membership-success.html" method="POST">
+            <input type="text" name="name" id="name" placeholder="Full Name" required><br>
+            <input type="email" name="email" id="email" placeholder="Email" required><br>
+            <textarea name="message" id="message" placeholder="Why do you want to join JSA?" required></textarea><br>
+            <button type="submit">Sign Up</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>© 2025 Japanese Students Association. All rights reserved.</p>
+        <p>Follow us on Social Media</p>
+    </footer>
+</body>
+</html>
