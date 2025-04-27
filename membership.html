@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join JSA</title>
+    <title>Membership - Join JSA</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/scripts.js" defer></script>
 </head>
@@ -22,19 +22,22 @@
 
     <section id="membership">
         <h2>Join the Japanese Students Association (JSA)</h2>
-        <p>Fill in the form below to become a member:</p>
+        <form id="membership-form">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required><br>
 
-        <form action="membership-success.html" method="POST">
-            <input type="text" name="name" id="name" placeholder="Full Name" required><br>
-            <input type="email" name="email" id="email" placeholder="Email" required><br>
-            <textarea name="message" id="message" placeholder="Why do you want to join JSA?" required></textarea><br>
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="reason-for-joining">Why do you want to join?</label>
+            <textarea id="reason-for-joining" name="reason-for-joining" required></textarea><br>
+
             <button type="submit">Sign Up</button>
         </form>
     </section>
 
     <footer>
         <p>© 2025 Japanese Students Association. All rights reserved.</p>
-        <p>Follow us on Social Media</p>
     </footer>
 </body>
 </html>

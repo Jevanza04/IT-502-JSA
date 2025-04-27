@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Events - E-board</title>
+    <title>Create or Edit Event - E-board</title>
     <link rel="stylesheet" href="css/styles.css">
-    <script src="js/scripts.js" defer></script>
+    <script src="js/scripts.js" defer></script> <!-- (changed to scripts.js instead of edit-events.js for easier management) -->
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><a href="membership.html">Membership</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="dashboard.html">Admin Dashboard</a></li>
+                <li><a href="edit-events.html">Edit Events</a></li>
+                <li><a href="members.html">View Members</a></li>
+                <li><a href="logout.html">Logout</a></li>
             </ul>
         </nav>
     </header>
 
-    <section id="edit-event">
+    <section id="edit-event" class="highlight-background">
         <h2>Create or Edit an Event</h2>
         <form id="edit-event-form">
             <label for="event-name">Event Name</label>
@@ -36,6 +36,11 @@
 
             <button type="submit">Save Event</button>
         </form>
+
+        <h2 style="margin-top: 50px;">Existing Events</h2>
+        <div id="jsa-event-list">
+            <!-- eboard events list will be populated here -->
+        </div>
     </section>
 
     <footer>

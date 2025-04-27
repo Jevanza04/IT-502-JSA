@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Members - E-board</title>
+    <title>View Members - Admin</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/scripts.js" defer></script>
 </head>
@@ -11,29 +11,20 @@
     <header>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><a href="membership.html">Membership</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="dashboard.html">Admin Dashboard</a></li>
+                <li><a href="edit-events.html">Edit Events</a></li>
+                <li><a href="members.html">View Members</a></li>
+                <li><a href="logout.html">Logout</a></li>
             </ul>
         </nav>
     </header>
 
-    <section id="members">
-        <h2>View All Members</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Message</th>
-                    <th>Registered Events</th>
-                </tr>
-            </thead>
-            <tbody id="members-list">
-                <!-- Members will be populated here by JavaScript -->
-            </tbody>
-        </table>
+    <section id="view-members" class="highlight-background">
+        <h2>Current JSA Club Members</h2>
+
+        <div id="members-list">
+            <!-- Members will be dynamically loaded here by scripts.js -->
+        </div>
     </section>
 
     <footer>

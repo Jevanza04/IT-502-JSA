@@ -1,46 +1,81 @@
-// Contact Form Success
-document.getElementById("contact-form").addEventListener("submit", function(event) {
-    event.preventDefault();  // Prevent default form submission behavior
-  
-    // After form submission, redirect to contact-success page
-    window.location.href = "contact-success.html";  // Redirect to the success page
-  });
-  
-  // Membership Form Success
-  document.getElementById("membership-form").addEventListener("submit", function(event) {
-    event.preventDefault();  // Prevent default form submission behavior
-    // After form submission, redirect to membership success page
-    window.location.href = "membership-success.html";  // Navigate to success page
-  });
-  
-  // E-board Sign Up Handling (creates account)
-  document.getElementById("signup-form").addEventListener("submit", function(event) {
+// =========================
+// Member Sign-up Handling
+// =========================
+document.getElementById("membership-form")?.addEventListener("submit", function(event) {
     event.preventDefault();
-    const username = document.getElementById("username").value;
+    const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const role = document.getElementById("role").value;
-  
-    fetch('/signup', {
+    const message = document.getElementById("reason-for-joining").value;
+
+    fetch('/member-signup', {
         method: 'POST',
-        body: JSON.stringify({ username, email, password, role }),
+        body: JSON.stringify({ name, email, message }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(response => response.json())
     .then(data => {
-        alert('You are all signed up!'); // Display success message
-        window.location.href = 'login.html'; // Redirect to login page
+        alert('Sign-up successful!');
+        window.location.href = 'membership-success.html';
     })
-    .catch(error => console.error('Error:', error));
-  });
-  
-  // E-board Login Handling (logs in and redirects to E-board pages)
-  document.getElementById("login-form").addEventListener("submit", function(event) {
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// =========================
+// E-board Sign Up Handling
+// =========================
+const signupForm = document.getElementById("signup-form");
+if (signupForm) {
+    signupForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const role = document.getElementById("role").value;
+
+        fetch('http://localhost:3000/signup', {
+            method: 'POST',
+            body: JSON.stringify({ username, email, password, role }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('You are all signed up!');
+            window.location.href = 'login.html';
+        })
+        .catch(error => console.error('Error:', error));
+    });
+}
+
+// =========================
+// Check login status
+// =========================
+document.addEventListener("DOMContentLoaded", function() {
+    const token = localStorage.getItem("token");
+    const loginLink = document.getElementById("login-link");
+
+    if (loginLink) {
+        if (token) {
+            loginLink.textContent = "Logout";
+            loginLink.href = "logout.html";
+        } else {
+            loginLink.textContent = "E-board Login";
+            loginLink.href = "login.html";
+        }
+    }
+});
+
+// =========================
+// Handle Login
+// =========================
+document.getElementById("login-form")?.addEventListener("submit", function(event) {
     event.preventDefault();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-  
-    fetch('/login', {
+
+    fetch('http://localhost:3000/login', {
         method: 'POST',
         body: JSON.stringify({ username, password }),
         headers: { 'Content-Type': 'application/json' }
@@ -48,96 +83,223 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     .then(response => response.json())
     .then(data => {
         if (data.token) {
-            localStorage.setItem('token', data.token); // Store JWT token in localStorage
-            localStorage.setItem('username', username); // Store username in localStorage
-            window.location.href = 'dashboard.html'; // Redirect to dashboard page
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('username', username);
+            window.location.href = 'dashboard.html';
         }
     })
-    .catch(error => console.error('Error:', error));
-  });
-  
-  // Display the username on top right if logged in
-  document.addEventListener("DOMContentLoaded", function() {
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+// =========================
+// Restrict E-board Pages
+// =========================
+document.addEventListener("DOMContentLoaded", function() {
     const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-  
-    if (username) {
-        const usernameElement = document.createElement('span');
-        usernameElement.textContent = `Welcome, ${username}`;
-        usernameElement.style.float = "right"; // Position the username to the top right
-        usernameElement.style.padding = "10px"; // Padding for better spacing
-        document.querySelector('nav').appendChild(usernameElement); // Append to navigation bar
+
+    if (window.location.pathname.includes("dashboard.html") || 
+        window.location.pathname.includes("edit-events.html") || 
+        window.location.pathname.includes("members.html")) {
+        if (!token) {
+            window.location.href = "login.html";
+        }
     }
-  });
-  
-  // Check if E-board member is logged in before allowing access to the Edit Events page
-  document.addEventListener("DOMContentLoaded", function() {
-    const token = localStorage.getItem("token");  // Check if token exists
-    if (!token) {
-        window.location.href = "login.html";  // If no token, redirect to login page
-    }
-  });
-  
-  // Handle event creation
-  document.getElementById("edit-event-form").addEventListener("submit", function(event) {
+});
+
+// =========================
+// Logout
+// =========================
+document.querySelector('a[href="logout.html"]')?.addEventListener('click', function(event) {
     event.preventDefault();
-  
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+});
+
+// =========================
+// Public Events List (events.html)
+// =========================
+document.addEventListener("DOMContentLoaded", function() {
+    const eventsList = document.getElementById("events-list");
+    if (eventsList) {
+        fetch('http://localhost:3000/events', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(event => {
+                const eventElement = document.createElement("div");
+                eventElement.innerHTML = `
+                    <h3>${event.event_name}</h3>
+                    <p><strong>Date:</strong> ${new Date(event.event_date).toLocaleString()}</p>
+                    <p><strong>Location:</strong> ${event.event_location}</p>
+                    <p><strong>Description:</strong> ${event.event_description}</p>
+                `;
+                eventsList.appendChild(eventElement);
+            });
+        })
+        .catch(error => console.error('Error fetching events:', error));
+    }
+});
+
+// =========================
+// Handle Event Creation (edit-events.html)
+// =========================
+document.getElementById("edit-event-form")?.addEventListener("submit", function(event) {
+    event.preventDefault();
+
     const eventName = document.getElementById("event-name").value;
     const eventDate = document.getElementById("event-date").value;
     const eventLocation = document.getElementById("event-location").value;
     const eventDescription = document.getElementById("event-description").value;
-  
-    // Send event data to backend for saving in the database
-    fetch("/events", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`  // Include token for authentication
-        },
-        body: JSON.stringify({
-            event_name: eventName,
-            event_date: eventDate,
-            event_location: eventLocation,
-            event_description: eventDescription
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        fetch('http://localhost:3000/events', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify({
+                event_name: eventName,
+                event_date: eventDate,
+                event_location: eventLocation,
+                event_description: eventDescription
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);  // Show success message
-        window.location.href = "events.html";  // Redirect back to events page
-    })
-    .catch(error => {
-        console.error("Error creating event:", error);
-    });
-  });
-  
-  // Handle viewing of members
-  document.addEventListener("DOMContentLoaded", function() {
-    const token = localStorage.getItem("token");  // Check if token exists
-    if (!token) {
-        window.location.href = "login.html";  // If no token, redirect to login page
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert('Event added successfully!');
+
+                document.getElementById("edit-event-form").reset();
+                window.history.replaceState({}, document.title, window.location.pathname);
+                loadAdminEvents();
+            } else {
+                alert('Error adding event.');
+            }
+        })
+        .catch(error => console.error('Error adding event:', error));
+    } else {
+        alert('You must be logged in to add events!');
     }
-  
-    // Fetch and display members
-    fetch("/members", {
-        method: "GET",
+});
+
+// =========================
+// Admin Events List (edit-events.html)
+// =========================
+document.addEventListener("DOMContentLoaded", function() {
+    if (document.getElementById("jsa-event-list")) {
+        loadAdminEvents();
+    }
+});
+
+function loadAdminEvents() {
+    const token = localStorage.getItem("token");
+
+    fetch('http://localhost:3000/events', {
+        method: 'GET',
         headers: {
-            "Authorization": `Bearer ${token}`  // Include token for authentication
+            'Content-Type': 'application/json',
+            'Authorization': token
         }
     })
     .then(response => response.json())
     .then(data => {
-        const membersList = document.getElementById("members-list");
-        membersList.innerHTML = data.map(member => `
-            <tr>
-                <td>${member.name}</td>
-                <td>${member.email}</td>
-                <td>${member.message}</td>
-                <td>${member.registered_events}</td>
-            </tr>
-        `).join('');
+        const eventList = document.getElementById("jsa-event-list");
+        eventList.innerHTML = "";
+
+        data.forEach(event => {
+            const eventElement = document.createElement("div");
+            eventElement.style.marginBottom = "20px";
+            eventElement.innerHTML = `
+                <h3>${event.event_name}</h3>
+                <p><strong>Date:</strong> ${new Date(event.event_date).toLocaleString()}</p>
+                <p><strong>Location:</strong> ${event.event_location}</p>
+                <p><strong>Description:</strong> ${event.event_description}</p>
+                <button onclick="deleteEvent(${event.id})">Delete Event</button>
+                <hr>
+            `;
+            eventList.appendChild(eventElement);
+        });
     })
-    .catch(error => {
-        console.error("Error fetching members:", error);
-    });
-  });  
+    .catch(error => console.error('Error loading admin events:', error));
+}
+
+function deleteEvent(eventId) {
+    const token = localStorage.getItem("token");
+
+    if (confirm('Are you sure you want to delete this event?')) {
+        fetch(`http://localhost:3000/events/${eventId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            loadAdminEvents();
+        })
+        .catch(error => console.error('Error deleting event:', error));
+    }
+}
+
+// =========================
+// Admin View Members List (members.html)
+// =========================
+document.addEventListener("DOMContentLoaded", function() {
+    const membersList = document.getElementById("members-list");
+    if (membersList) {
+        const token = localStorage.getItem("token");
+
+        fetch('http://localhost:3000/members', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(member => {
+                const memberElement = document.createElement("div");
+                memberElement.style.marginBottom = "20px";
+                memberElement.innerHTML = `
+                    <h3>${member.name}</h3>
+                    <p><strong>Email:</strong> ${member.email}</p>
+                    <p><strong>Reason for Joining:</strong> ${member.message}</p>
+                    <button onclick="deleteMember(${member.id})">Delete Member</button>
+                    <hr>
+                `;
+                membersList.appendChild(memberElement);
+            });
+        })
+        .catch(error => console.error('Error fetching members:', error));
+    }
+});
+
+function deleteMember(memberId) {
+    const token = localStorage.getItem("token");
+
+    if (confirm('Are you sure you want to delete this member?')) {
+        fetch(`http://localhost:3000/members/${memberId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            window.location.reload();
+        })
+        .catch(error => console.error('Error deleting member:', error));
+    }
+}

@@ -280,3 +280,34 @@ footer a:hover {
 .success-membership-section .button:hover {
     background-color: #d40010;
 }
+/* Add this to your styles.css */
+
+.highlight-background {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    color: white; /* Ensure text is visible */
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+header nav a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+}
+
+header nav a:hover {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline-block;
+    margin-right: 15px;
+}
