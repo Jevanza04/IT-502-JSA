@@ -13,26 +13,22 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(__dirname)); // ✅ Serve static files like HTML/CSS/JS from your folder
 
-// Database setup for Railway MariaDB
+// Database setup
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,         // <-- use environment variables
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: 3306,
-  ssl: {
-    rejectUnauthorized: true
-  }
+  host: 'localhost',
+  user: 'root',
+  password: 'J3vanza04*', // Your password
+  database: 'jsa_database'
 });
 
 db.connect((err) => {
   if (err) throw err;
-  console.log('Connected to MariaDB database');
+  console.log('Connected to MySQL database');
 });
 
 // 🔥 Corrected Member Sign-Up Handling
-app.post('/member-signup', (req, res) => {
-  const { name, email, message } = req.body;
+app.post('/member-signup', (req, res) => { // ✅ match frontend route
+  const { name, email, message } = req.body;  // ✅ match database column
 
   const query = 'INSERT INTO members (name, email, message) VALUES (?, ?, ?)';
   db.query(query, [name, email, message], (err, result) => {
@@ -52,6 +48,7 @@ app.get('/members', verifyToken, (req, res) => {
     res.json(result);
   });
 });
+
 
 // Eboard Sign Up
 app.post('/signup', (req, res) => {
@@ -151,5 +148,5 @@ app.delete('/members/:id', verifyToken, (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });

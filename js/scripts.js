@@ -35,7 +35,7 @@ if (signupForm) {
         const password = document.getElementById("password").value;
         const role = document.getElementById("role").value;
 
-        fetch('/signup', {
+        fetch('http://localhost:3000/signup', {
             method: 'POST',
             body: JSON.stringify({ username, email, password, role }),
             headers: { 'Content-Type': 'application/json' }
@@ -75,7 +75,7 @@ document.getElementById("login-form")?.addEventListener("submit", function(event
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    fetch('/login', {
+    fetch('http://localhost:3000/login', {
         method: 'POST',
         body: JSON.stringify({ username, password }),
         headers: { 'Content-Type': 'application/json' }
@@ -123,7 +123,7 @@ document.querySelector('a[href="logout.html"]')?.addEventListener('click', funct
 document.addEventListener("DOMContentLoaded", function() {
     const eventsList = document.getElementById("events-list");
     if (eventsList) {
-        fetch('/events', {
+        fetch('http://localhost:3000/events', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -158,7 +158,7 @@ document.getElementById("edit-event-form")?.addEventListener("submit", function(
     const token = localStorage.getItem("token");
 
     if (token) {
-        fetch('/events', {
+        fetch('http://localhost:3000/events', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -175,6 +175,7 @@ document.getElementById("edit-event-form")?.addEventListener("submit", function(
         .then(data => {
             if (data.message) {
                 alert('Event added successfully!');
+
                 document.getElementById("edit-event-form").reset();
                 window.history.replaceState({}, document.title, window.location.pathname);
                 loadAdminEvents();
@@ -200,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function loadAdminEvents() {
     const token = localStorage.getItem("token");
 
-    fetch('/events', {
+    fetch('http://localhost:3000/events', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -233,7 +234,7 @@ function deleteEvent(eventId) {
     const token = localStorage.getItem("token");
 
     if (confirm('Are you sure you want to delete this event?')) {
-        fetch(`/events/${eventId}`, {
+        fetch(`http://localhost:3000/events/${eventId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -257,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (membersList) {
         const token = localStorage.getItem("token");
 
-        fetch('/members', {
+        fetch('http://localhost:3000/members', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -287,7 +288,7 @@ function deleteMember(memberId) {
     const token = localStorage.getItem("token");
 
     if (confirm('Are you sure you want to delete this member?')) {
-        fetch(`/members/${memberId}`, {
+        fetch(`http://localhost:3000/members/${memberId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
